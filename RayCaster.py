@@ -13,11 +13,11 @@ wallcolors = {
     }
 
 wallTextures = {
-    '1': pygame.image.load('wall1.png'),
-    '2': pygame.image.load('wall2.png'),
-    '3': pygame.image.load('wall3.png'),
-    '4': pygame.image.load('wall4.png'),
-    '5': pygame.image.load('wall5.png')
+    '1': pygame.image.load('Egipcio_1.png'),
+    '2': pygame.image.load('Egipcio_2.png'),
+    '3': pygame.image.load('Egipcio_3.png'),
+    '4': pygame.image.load('Egipcio_2.png'),
+    '5': pygame.image.load('Egipcio_1.png')
     }
 
 
@@ -160,7 +160,7 @@ screen = pygame.display.set_mode((width,height), pygame.DOUBLEBUF | pygame.HWACC
 screen.set_alpha(None)
 
 rCaster = Raycaster(screen)
-rCaster.load_map("map2.txt")
+rCaster.load_map("mapa_p.txt")
 
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Arial", 25)
@@ -178,14 +178,6 @@ def updateFPS():
 
 isRunning = True
 while isRunning:
-
-    screen.fill((0,0,0))
-    drawText('Main',font,(255,255,255),screen,20,20)
-
-    buttom_com = pygame.Rect(50,100,200,50)
-    buttom_sal = pygame.Rect(50,100,200,50)
-    pygame.draw.rect(screen,(255,0,0),buttom_com)
-    pygame.draw.rect(screen,(255,0,0),buttom_sal)
 
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:
