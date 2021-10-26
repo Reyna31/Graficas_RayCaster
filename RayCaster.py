@@ -207,10 +207,23 @@ def Main_Menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 isRunning = False
-            #if event.type == pygame.KEYDOWN:
-
-                #if event.key == pygame.K_INSERT:
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    pygame.draw.rect (screen, (0, 100, 0), button_1)
+                    drawText ('Jugar', font, (255, 255, 255), screen, 60, 110)
+                elif event.key == pygame.K_DOWN:
+                    pygame.draw.rect (screen, (0, 100, 0), button_2)
+                    drawText ('Jugar', font, (255, 255, 255), screen, 60, 110)
+                elif event.key == pygame.K_KP_ENTER:
+                    click = True
+            elif event.type == pygame.MOUSEMOTION:
+                if button_1.collidepoint(mx,my):
+                    pygame.draw.rect (screen, (0, 100, 0), button_1)
+                    drawText ('Jugar', font, (255, 255, 255), screen, 60, 110)
+                if button_2.collidepoint(mx,my):
+                    pygame.draw.rect (screen, (0, 100, 0), button_2)
+                    drawText ('Salir', font, (255, 255, 255), screen, 60, 210)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     click = True
 
