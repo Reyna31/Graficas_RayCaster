@@ -1,8 +1,10 @@
+import sys
+
 import pygame
 
 from math import cos, sin, pi
 
-RAY_AMOUNT = 100
+RAY_AMOUNT = 20
 
 wallcolors = {
     '1': pygame.Color('red'),
@@ -163,12 +165,13 @@ rCaster = Raycaster(screen)
 rCaster.load_map("mapa_p.txt")
 
 clock = pygame.time.Clock()
-font = pygame.font.SysFont("Arial", 25)
+font = pygame.font.SysFont("Calibri", 30)
+fondo = pygame.image.load("Fondo.png").convert()
 
 def drawText(text, font, color, surface, x, y):
     textObj = font.render(text,1,color)
     textRect = textObj.get_rect()
-    textRect.center = (x,y)
+    textRect.topleft = (x,y)
     surface.blit(textObj, textRect)
 
 def updateFPS():
@@ -176,63 +179,106 @@ def updateFPS():
     fps = font.render(fps, 1, pygame.Color("white"))
     return fps
 
-isRunning = True
-while isRunning:
+click = False
+def Main_Menu():
 
-    for ev in pygame.event.get():
-        if ev.type == pygame.QUIT:
-            isRunning = False
+    isRunning = True
+    while isRunning:
+        screen.blit (fondo, [0, 0])
+        drawText ('Menu Principal', font, (255, 255, 255), screen, 50, 50)
+        drawText('PyraEscape: The VideoGame',font,(255,255,255),screen,50,20)
 
-        elif ev.type == pygame.KEYDOWN:
-            newX = rCaster.player['x']
-            newY = rCaster.player['y']
-            forward = rCaster.player['angle'] * pi / 180
-            right = (rCaster.player['angle'] + 90) * pi / 180
+        mx,my = pygame.mouse.get_pos()
 
-            if ev.key == pygame.K_ESCAPE:
+        button_1 = pygame.Rect (50, 100, 200, 50)
+        button_2 = pygame.Rect (50, 200, 200, 50)
+        if button_1.collidepoint((mx,my)):
+            if click:
+                game()
+        if button_2.collidepoint((mx,my)):
+            if click:
                 isRunning = False
-            elif ev.key == pygame.K_w:
-                newX += cos(forward) * rCaster.stepSize
-                newY += sin(forward) * rCaster.stepSize
-            elif ev.key == pygame.K_s:
-                newX -= cos(forward) * rCaster.stepSize
-                newY -= sin(forward) * rCaster.stepSize
-            elif ev.key == pygame.K_a:
-                newX -= cos(right) * rCaster.stepSize
-                newY -= sin(right) * rCaster.stepSize
-            elif ev.key == pygame.K_d:
-                newX += cos(right) * rCaster.stepSize
-                newY += sin(right) * rCaster.stepSize
-            elif ev.key == pygame.K_q:
-                rCaster.player['angle'] -= rCaster.turnSize
-            elif ev.key == pygame.K_e:
-                rCaster.player['angle'] += rCaster.turnSize
+        pygame.draw.rect (screen, (255, 0, 0), button_1)
+        pygame.draw.rect (screen, (255, 0, 0), button_2)
+        drawText ('Jugar', font, (255, 255, 255), screen, 60, 110)
+        drawText ('Salir', font, (255, 255, 255), screen, 60, 210)
 
-            i = int(newX/rCaster.blocksize)
-            j = int(newY/rCaster.blocksize)
+        click = False
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                isRunning = False
+            #if event.type == pygame.KEYDOWN:
 
-            if rCaster.map[j][i] == ' ':
-                rCaster.player['x'] = newX
-                rCaster.player['y'] = newY
+                #if event.key == pygame.K_INSERT:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+
+        pygame.display.update()
+        clock.tick(60)
 
 
-    screen.fill(pygame.Color("gray"))
 
-    # Techo
-    screen.fill(pygame.Color("saddlebrown"), (int(width / 2), 0,  int(width / 2), int(height / 2)))
+def game():
+    isRunning = True
+    while isRunning:
 
-    # Piso
-    screen.fill(pygame.Color("dimgray"), (int(width / 2), int(height / 2),  int(width / 2), int(height / 2)))
+        for ev in pygame.event.get():
+            if ev.type == pygame.QUIT:
+                isRunning = False
+
+            elif ev.type == pygame.KEYDOWN:
+                newX = rCaster.player['x']
+                newY = rCaster.player['y']
+                forward = rCaster.player['angle'] * pi / 180
+                right = (rCaster.player['angle'] + 90) * pi / 180
+
+                if ev.key == pygame.K_ESCAPE:
+                    isRunning = False
+                elif ev.key == pygame.K_w:
+                    newX += cos(forward) * rCaster.stepSize
+                    newY += sin(forward) * rCaster.stepSize
+                elif ev.key == pygame.K_s:
+                    newX -= cos(forward) * rCaster.stepSize
+                    newY -= sin(forward) * rCaster.stepSize
+                elif ev.key == pygame.K_a:
+                    newX -= cos(right) * rCaster.stepSize
+                    newY -= sin(right) * rCaster.stepSize
+                elif ev.key == pygame.K_d:
+                    newX += cos(right) * rCaster.stepSize
+                    newY += sin(right) * rCaster.stepSize
+                elif ev.key == pygame.K_q:
+                    rCaster.player['angle'] -= rCaster.turnSize
+                elif ev.key == pygame.K_e:
+                    rCaster.player['angle'] += rCaster.turnSize
+
+                i = int(newX/rCaster.blocksize)
+                j = int(newY/rCaster.blocksize)
+
+                if rCaster.map[j][i] == ' ':
+                    rCaster.player['x'] = newX
+                    rCaster.player['y'] = newY
 
 
-    rCaster.render()
+        screen.fill(pygame.Color("gray"))
 
-    #FPS
-    screen.fill(pygame.Color("black"), (0,0,30,30) )
-    screen.blit(updateFPS(), (0,0))
-    clock.tick(60)
+        # Techo
+        screen.fill(pygame.Color("saddlebrown"), (int(width / 2), 0,  int(width / 2), int(height / 2)))
+
+        # Piso
+        screen.fill(pygame.Color("dimgray"), (int(width / 2), int(height / 2),  int(width / 2), int(height / 2)))
 
 
-    pygame.display.flip()
+        rCaster.render()
+
+        #FPS
+        screen.fill(pygame.Color("black"), (0,0,30,30) )
+        screen.blit(updateFPS(), (0,0))
+        clock.tick(60)
+
+
+        pygame.display.flip()
+
+Main_Menu()
 
 pygame.quit()
